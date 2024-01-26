@@ -54,8 +54,42 @@ def reading_my_data(datafilename):
 
     return df_transposed, df_orig
 
+
+def logistic_function(t, n0, g, t0):
+    
+    """
+    This function calculates the logistic function with the scale factor n0 
+    and growth rate g
+    
+    """
+    
+    logistic_f = n0 / (1 + np.exp(-g*(t - t0)))
+    return logistic_f
+
+
+#main program
+
 df_CO2_transposed, df_CO2_orig = reading_my_data("CO2_emmisions.csv")
 
+
 df_CO2_transposed.head(10)
+
+CO2_5_countries = df_CO2_transposed.iloc[0:5]
+corr = CO2_5_countries.corr(numeric_only=True)
+print(corr.round(1))
+
+# fig, ax = plt.subplots(figsize=(8, 8))
+plt.figure(figsize=[8, 8])
+
+# this prouces an image
+plt.imshow(corr)
+plt.colorbar()
+annotations = CO2_5_countries.columns[0:5] # extract relevant headers
+plt.xticks(ticks=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], labels=annotations)
+plt.yticks(ticks=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], labels=annotations)
+
+plt.show()
+
+
 
 
