@@ -67,28 +67,40 @@ def logistic_function(t, n0, g, t0):
     return logistic_f
 
 
-#main program
+def colour_map_countries(my_df):
+    """
+    This function plots the correlation colour map of CO2 production 
+    between my selected countries when called with my selected dataframe in my_df
+    
+    """
+    plt.figure(1)
+    
+
+    corr = my_df.corr(numeric_only=True)
+    print(corr.round(3))
+    plt.figure(figsize=[10, 8])
+    
+    plt.imshow(corr)
+    plt.colorbar()
+    annotations = CO2_5_countries.columns[1:6] # extract relevant headers
+    plt.title("CO2 emmissions correlation by country 1990-2020", fontsize=20, 
+              weight='bold', va='top')
+    plt.xticks(ticks=[0, 1, 2, 3, 4], labels=annotations, fontsize = 20)
+    plt.yticks(ticks=[0, 1, 2, 3, 4], labels=annotations, fontsize = 20)
+    
+    plt.show()
+    plt.tight_layout() 
+    return
+
+
 
 df_CO2_transposed, df_CO2_orig = reading_my_data("CO2_emmisions.csv")
+CO2_5_countries = df_CO2_transposed.iloc[0:, 0:6]
 
+#call colour map function for correlation of CO2 production between countries
+colour_map_countries(CO2_5_countries)
 
-df_CO2_transposed.head(10)
-
-CO2_5_countries = df_CO2_transposed.iloc[0:5]
-corr = CO2_5_countries.corr(numeric_only=True)
-print(corr.round(1))
-
-# fig, ax = plt.subplots(figsize=(8, 8))
-plt.figure(figsize=[8, 8])
-
-# this prouces an image
-plt.imshow(corr)
-plt.colorbar()
-annotations = CO2_5_countries.columns[0:5] # extract relevant headers
-plt.xticks(ticks=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], labels=annotations)
-plt.yticks(ticks=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], labels=annotations)
-
-plt.show()
+print(CO2_5_countries.describe())
 
 
 
