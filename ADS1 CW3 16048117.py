@@ -14,13 +14,12 @@ Hana Meah
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
-from sklearn.impute import SimpleImputer
 import sklearn.cluster as cluster
 import sklearn.metrics as skmet
 import scipy.optimize as opt
 import cluster_tools as ct
 
+# https://github.com/HanaMeah/ADS1_CW3/blob/main/ADS1%20CW3%2016048117.py
 
 #functions
 
@@ -159,7 +158,6 @@ def clusterplot ():
     plt.xlabel("CO2 emmissions", fontsize=20)
     plt.ylabel("GDP per capita", fontsize=20)
     plt.title("4 cluster plot GDP and CO2", fontsize=20, weight='bold', va='top')
-    plt.legend()
     plt.show()
     return
 
@@ -200,10 +198,6 @@ clusterplot()
 #trying
 
 region = CO2_5_countries.copy()
-print(region)
-
-plt.plot(region['Year'], region['France'])
-plt.show()
 
 region['Year'] = region['Year'].astype(int)
 region["trial"] = logistic(region["Year"], 3e12, 0.10, 1990)
@@ -214,32 +208,15 @@ year = np.linspace(1990, 2025, 100)
 forecast = logistic(year, *param)
 plt.figure()
 
+plt.figure(figsize=(12, 6))
 plt.plot(year, forecast, label="Prediction", color='red')
 plt.plot(region["Year"], region["France"], label="France data ", color='green')
 
-plt.title("Prediction for CO2 Emissions of the World")
-plt.xlabel("Year")
-plt.ylabel("Emission")
-plt.legend()
+plt.title("Prediction for CO2 Emissions of France", fontsize=20, weight='bold', va='top')
+plt.xlabel("Year", fontsize=20)
+plt.ylabel("CO2 emmissions", fontsize=20)
+plt.legend(fontsize=20)
 plt.show()
-
-
-
-df_CO2_orig["trial"] = logistic(df_CO2_orig["Country Name"], 3e12, 0.10, 1990)
-
-logistic(df_CO2_orig["1990"], 3e12, 0.10, 1990)
-df_CO2_orig.plot("1990", ["2020", "trial"])
-plt.show()
-
-
-plt.plot(df_CO2_orig["trial"], df_CO2_orig["1990"], label="1990", color='#2DD427')
-plt.plot(year, forecast, label="Prediction", color='#F8240B')
-plt.title("Prediction for CO2 Emissions of the World")
-plt.xlabel("Year")
-plt.ylabel("CO2 emmissions")
-plt.legend()
-plt.show()
-
 
 
 
