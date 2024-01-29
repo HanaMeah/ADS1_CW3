@@ -57,19 +57,6 @@ def reading_my_data(datafilename):
 
     return df_transposed, df_orig
 
-
-def logistic_function(t, n0, g, t0):
-    
-    """
-    This function calculates the logistic function with the scale factor n0 
-    and growth rate g
-    
-    """
-    
-    logistic_f = n0 / (1 + np.exp(-g*(t - t0)))
-    return logistic_f
-
-
 def colour_map_countries(my_df, indicator):
     """
     This function plots the correlation colour map of CO2 production 
@@ -90,8 +77,6 @@ def colour_map_countries(my_df, indicator):
               weight='bold', va='top')
     plt.xticks(ticks=[0, 1, 2, 3, 4], labels=annotations, fontsize = 20)
     plt.yticks(ticks=[0, 1, 2, 3, 4], labels=annotations, fontsize = 20)
-    
-    plt.show()
     plt.tight_layout() 
     return
 
@@ -117,7 +102,7 @@ def merge_GDP_and_CO2():
     # copy a column from GDP
     CO2_and_GDP_2020["GDP"] = GDP["2020"]
     CO2_and_GDP_2020 = CO2_and_GDP_2020.dropna()
-    print(CO2_and_GDP_2020)
+  
     return  CO2_and_GDP_2020
 
 def clusterplot ():
@@ -174,8 +159,18 @@ def clusterplot ():
     plt.xlabel("CO2 emmissions", fontsize=20)
     plt.ylabel("GDP per capita", fontsize=20)
     plt.title("4 cluster plot GDP and CO2", fontsize=20, weight='bold', va='top')
+    plt.legend()
     plt.show()
     return
+
+def logistic(t, n0, g, t0):
+    """
+    Calculates the logistic function with scale factor n0 and growth rate g
+    """
+    
+    f = n0 / (1 + np.exp(-g*(t - t0)))
+    
+    return f
 
 #main program
 #read CO2 emmissions file
@@ -200,6 +195,53 @@ colour_map_countries(GDP_5_countries, "GDP per capita")
 
 #call my clusterplot
 clusterplot()
+
+
+#trying
+
+region = CO2_5_countries.copy()
+print(region)
+
+plt.plot(region['Year'], region['France'])
+plt.show()
+
+region['Year'] = region['Year'].astype(int)
+region["trial"] = logistic(region["Year"], 3e12, 0.10, 1990)
+param, covar = opt.curve_fit(logistic, region["Year"], region["France"], p0=(3e12, 0.1, 1990))
+
+# create array for forecasting
+year = np.linspace(1990, 2025, 100)
+forecast = logistic(year, *param)
+plt.figure()
+
+plt.plot(year, forecast, label="Prediction", color='red')
+plt.plot(region["Year"], region["France"], label="France data ", color='green')
+
+plt.title("Prediction for CO2 Emissions of the World")
+plt.xlabel("Year")
+plt.ylabel("Emission")
+plt.legend()
+plt.show()
+
+
+
+df_CO2_orig["trial"] = logistic(df_CO2_orig["Country Name"], 3e12, 0.10, 1990)
+
+logistic(df_CO2_orig["1990"], 3e12, 0.10, 1990)
+df_CO2_orig.plot("1990", ["2020", "trial"])
+plt.show()
+
+
+plt.plot(df_CO2_orig["trial"], df_CO2_orig["1990"], label="1990", color='#2DD427')
+plt.plot(year, forecast, label="Prediction", color='#F8240B')
+plt.title("Prediction for CO2 Emissions of the World")
+plt.xlabel("Year")
+plt.ylabel("CO2 emmissions")
+plt.legend()
+plt.show()
+
+
+
 
 
 
